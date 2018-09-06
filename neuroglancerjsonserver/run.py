@@ -2,7 +2,7 @@ import sys
 from werkzeug.serving import WSGIRequestHandler
 import os
 
-from neuroglancerjsonserver.app import create_app
+from neuroglancerjsonserver import create_app
 
 app = create_app()
 
