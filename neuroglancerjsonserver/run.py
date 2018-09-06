@@ -2,16 +2,15 @@ import sys
 from werkzeug.serving import WSGIRequestHandler
 import os
 
-from neuroglancerjsonserver.app import create_app
+from neuroglancerjsonserver import create_app
 
 app = create_app()
 
 if __name__ == '__main__':
-    assert len(sys.argv) == 3
+    assert len(sys.argv) == 2
     HOME = os.path.expanduser("~")
 
-    table_id = sys.argv[1]
-    port = int(sys.argv[2])
+    port = int(sys.argv[1])
 
     # Set HTTP protocol
     WSGIRequestHandler.protocol_version = "HTTP/1.1"

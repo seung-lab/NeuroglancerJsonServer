@@ -6,7 +6,7 @@ import datetime
 
 from neuroglancerjsonserver import database
 
-bp = Blueprint('pychunkedgraph', __name__, url_prefix="/segmentation/")
+bp = Blueprint('neuroglancerjsonserver', __name__, url_prefix="/")
 
 # -------------------------------
 # ------ Access control and index
@@ -91,11 +91,13 @@ def get_db():
 def get_json(json_id):
     db = get_db()
 
-    return db.get_json(int(json_id))
+    json_data = db.get_json(int(json_id))
+
+    return json_data
 
 
 @bp.route('/commit_json', methods=['POST'])
-def get_json_url():
+def add_json():
     json_data = json.loads(request.data)
 
     db = get_db()

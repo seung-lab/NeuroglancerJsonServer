@@ -37,6 +37,8 @@ class JsonDataBase(object):
 
     def get_json(self, json_id):
         key = self.client.key(self.kind, json_id, namespace=self.namespace)
-        entity = self.client.get(key)
 
-        return entity.get("json")
+        entity = self.client.get(key)
+        json_data =  entity.get("json")
+
+        return json_data

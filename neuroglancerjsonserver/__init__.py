@@ -29,10 +29,10 @@ def configure_app(app):
     app.config.from_object(config.BaseConfig)
 
     # Configure logging
-    handler = logging.FileHandler(app.config['LOGGING_LOCATION'])
-    handler.setLevel(app.config['LOGGING_LEVEL'])
-    formatter = logging.Formatter(app.config['LOGGING_FORMAT'])
-    handler.setFormatter(formatter)
-    app.logger.addHandler(handler)
+    # handler = logging.FileHandler(app.config['LOGGING_LOCATION'])
+    # handler.setLevel(app.config['LOGGING_LEVEL'])
+    # formatter = logging.Formatter(app.config['LOGGING_FORMAT'])
+    # handler.setFormatter(formatter)
+    # app.logger.addHandler(handler)
 
 
