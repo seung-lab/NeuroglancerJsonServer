@@ -1,9 +1,10 @@
 from flask import Blueprint, request, make_response, g
 from flask import current_app
 import json
-import numpy as np
 import time
 import datetime
+
+from neuroglancerjsonserver import database
 
 bp = Blueprint('pychunkedgraph', __name__, url_prefix="/segmentation/")
 
@@ -81,17 +82,23 @@ def unhandled_exception(e):
 # ------ Applications
 # -------------------
 
+def get_db():
+    if 'db' not in g:
+        g.db = database.JsonDataBase()
+    return g.db
 
-@bp.route('/JSON_URL/<json_id>', methods=['GET'])
-def get_json_url(json_id):
+@bp.route('/get_json/<json_id>', methods=['GET'])
+def get_json(json_id):
+    db = get_db()
+
+    return db.get_json(int(json_id))
 
 
-    return "path"
-
-
-@bp.route('/COMMIT_STATE', methods=['POST'])
+@bp.route('/commit_json', methods=['POST'])
 def get_json_url():
-    json_state = json.loads(request.data)
+    json_data = json.loads(request.data)
 
-    return json_id
+    db = get_db()
+
+    return db.add_json(json_data)
 
