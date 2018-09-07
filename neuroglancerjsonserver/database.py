@@ -1,4 +1,5 @@
 import os
+import datetime
 from google.cloud import datastore
 
 HOME = os.path.expanduser('~')
@@ -32,7 +33,11 @@ class JsonDataBase(object):
         key = self.client.key(self.kind, namespace=self.namespace)
         entity = datastore.Entity(key)
         entity['json'] = json_data
-        entity['access_counter'] = int(0)
+        entity['access_counter'] = int(1)
+
+        now = datetime.datetime.utcnow()
+        entity['date'] = now
+        entity["last_date"] = now
 
         self.client.put(entity)
 
@@ -47,7 +52,10 @@ class JsonDataBase(object):
         if 'access_counter' in entity:
             entity['access_counter'] += int(1)
         else:
-            entity['access_counter'] = int(1)
+            entity['access_counter'] = int(2)
+
+        entity["last_date"] = datetime.datetime.utcnow()
+
         self.client.put(entity)
 
         return json_data
