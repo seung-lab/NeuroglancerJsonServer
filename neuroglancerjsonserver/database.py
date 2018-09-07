@@ -33,6 +33,8 @@ class JsonDataBase(object):
         entity = datastore.Entity(key)
         entity['json'] = json_data
 
+        self.client.put(entity)
+
         return entity.key.id
 
     def get_json(self, json_id):

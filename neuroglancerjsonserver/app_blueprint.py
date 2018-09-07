@@ -12,7 +12,7 @@ bp = Blueprint('neuroglancerjsonserver', __name__, url_prefix="/")
 # ------ Access control and index
 # -------------------------------
 
-@bp.route('/')
+# @bp.route('/')
 @bp.route("/index")
 def index():
     return "NeuroglancerJsonServer"
@@ -87,7 +87,7 @@ def get_db():
         g.db = database.JsonDataBase()
     return g.db
 
-@bp.route('/get_json/<json_id>', methods=['GET'])
+@bp.route('/<json_id>', methods=['GET'])
 def get_json(json_id):
     db = get_db()
 
@@ -96,11 +96,12 @@ def get_json(json_id):
     return jsonify(json_data)
 
 
-@bp.route('/commit_json', methods=['POST'])
+@bp.route('/', methods=['POST'])
 def add_json():
     json_data = json.loads(request.data)
 
     db = get_db()
 
-    return db.add_json(json_data)
+    json_id = db.add_json(json_data)
 
+    return str(json_id)
