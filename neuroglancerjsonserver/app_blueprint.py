@@ -1,4 +1,4 @@
-from flask import Blueprint, request, make_response, g
+from flask import Blueprint, request, make_response, jsonify, g
 from flask import current_app
 import json
 import time
@@ -93,7 +93,7 @@ def get_json(json_id):
 
     json_data = db.get_json(int(json_id))
 
-    return json_data
+    return jsonify(json_data)
 
 
 @bp.route('/commit_json', methods=['POST'])
