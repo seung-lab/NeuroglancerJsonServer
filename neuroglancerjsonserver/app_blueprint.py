@@ -12,8 +12,8 @@ bp = Blueprint('neuroglancerjsonserver', __name__, url_prefix="/")
 # ------ Access control and index
 # -------------------------------
 
-# @bp.route('/')
-@bp.route("/index")
+@bp.route('/', methods=["GET"])
+@bp.route("/index", methods=["GET"])
 def index():
     return "NeuroglancerJsonServer"
 
