@@ -32,6 +32,7 @@ class JsonDataBase(object):
         key = self.client.key(self.kind, namespace=self.namespace)
         entity = datastore.Entity(key)
         entity['json'] = json_data
+        entity['access_counter'] = int(0)
 
         self.client.put(entity)
 
@@ -42,5 +43,11 @@ class JsonDataBase(object):
 
         entity = self.client.get(key)
         json_data =  entity.get("json")
+
+        if 'access_counter' in entity:
+            entity['access_counter'] += int(1)
+        else:
+            entity['access_counter'] = int(1)
+        self.client.put(entity)
 
         return json_data
