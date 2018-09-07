@@ -1,2 +1,2 @@
 # NeuroglancerJsonServer
-REST API to server and store Neuroglancer 
+REST API to serve and store Neuroglancer jsons
