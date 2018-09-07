@@ -4,6 +4,14 @@ import os
 
 from neuroglancerjsonserver import create_app
 
+HOME = os.path.expanduser("~")
+
+letsencrypt_path = '/etc/letsencrypt/live/www.dynamicannotationframework.com/'
+ssl_context = (letsencrypt_path + 'fullchain.pem',
+               letsencrypt_path + 'privkey.pem')
+
+print(ssl_context)
+
 app = create_app()
 
 if __name__ == '__main__':
@@ -13,12 +21,11 @@ if __name__ == '__main__':
     port = int(sys.argv[1])
 
     # Set HTTP protocol
-    WSGIRequestHandler.protocol_version = "HTTP/1.1"
-    # WSGIRequestHandler.protocol_version = "HTTP/2.0"
+    # WSGIRequestHandler.protocol_version = "HTTPS/1.1"
+    WSGIRequestHandler.protocol_version = "HTTP/2.0"
 
     app.run(host='0.0.0.0',
             port=port,
             debug=True,
             threaded=True,
-            ssl_context=(HOME + '/keys/server.crt',
-                         HOME + '/keys/server.key'))
+            ssl_context=ssl_context)
