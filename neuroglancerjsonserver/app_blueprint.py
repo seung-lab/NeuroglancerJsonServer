@@ -7,7 +7,7 @@ import datetime
 from neuroglancerjsonserver import database
 
 bp = Blueprint('neuroglancerjsonserver', __name__, url_prefix="/ngl_state")
-__version__ = "0.0.8"
+__version__ = "0.0.12"
 # -------------------------------
 # ------ Access control and index
 # -------------------------------
@@ -98,8 +98,8 @@ def get_json(json_id):
     return jsonify(json_data)
 
 
-@bp.route('/', methods=['POST'])
-@bp.route('//', methods=['POST'])
+@bp.route('/post', methods=['POST'])
+@bp.route('/post/', methods=['POST'])
 def add_json():
     json_data = json.loads(request.data)
 
