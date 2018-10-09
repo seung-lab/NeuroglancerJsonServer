@@ -98,8 +98,8 @@ def get_json(json_id):
     return jsonify(json_data)
 
 
-@bp.route('/', methods=['POST'])
-@bp.route('//', methods=['POST'])
+@bp.route('/post', methods=['POST'])
+@bp.route('/post/', methods=['POST'])
 def add_json():
     json_data = json.loads(request.data)
 
