@@ -7,7 +7,7 @@ import datetime
 from neuroglancerjsonserver import database
 
 bp = Blueprint('neuroglancerjsonserver', __name__, url_prefix="/ngl_state")
-__version__ = "0.0.4"
+__version__ = "0.0.3"
 # -------------------------------
 # ------ Access control and index
 # -------------------------------
@@ -16,7 +16,7 @@ __version__ = "0.0.4"
 @bp.route('//', methods=["GET"])
 @bp.route("/index", methods=["GET"])
 def index():
-    return "NeuroglancerJsonServer"
+    return "NeuroglancerJsonServer - version " + __version__
 
 
 @bp.route
