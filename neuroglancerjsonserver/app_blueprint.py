@@ -104,4 +104,4 @@ def add_json():
 
     json_id = db.add_json(json_data)
 
-    return "{}{}".format(request.url, json_id)
+    return jsonify("{}{}".format(request.url, json_id))
