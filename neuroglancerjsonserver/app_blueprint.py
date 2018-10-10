@@ -103,7 +103,7 @@ def add_json():
 
     db = get_db()
 
-    json_id = db.add_json(request.json)
+    json_id = db.add_json(request.data)
 
     url_base = request.url.strip("/").rsplit("/", 1)[0]
 
