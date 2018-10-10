@@ -44,11 +44,15 @@ class JsonDataBase(object):
 
         return entity.key.id
 
-    def get_json(self, json_id):
+    def get_json(self, json_id, decompress=True):
         key = self.client.key(self.kind, json_id, namespace=self.namespace)
 
         entity = self.client.get(key)
-        json_data =  zlib.decompress(entity.get("json"))
+
+        json_data = entity.get("json")
+
+        if decompress:
+            json_data = zlib.decompress(json_data)
 
         if 'access_counter' in entity:
             entity['access_counter'] += int(1)
