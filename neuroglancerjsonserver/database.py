@@ -1,4 +1,5 @@
 import os
+import zlib
 import datetime
 from google.cloud import datastore
 
@@ -32,7 +33,7 @@ class JsonDataBase(object):
     def add_json(self, json_data):
         key = self.client.key(self.kind, namespace=self.namespace)
         entity = datastore.Entity(key)
-        entity['json'] = json_data
+        entity['json'] = zlib.compress(json_data)
         entity['access_counter'] = int(1)
 
         now = datetime.datetime.utcnow()
@@ -47,7 +48,7 @@ class JsonDataBase(object):
         key = self.client.key(self.kind, json_id, namespace=self.namespace)
 
         entity = self.client.get(key)
-        json_data =  entity.get("json")
+        json_data =  zlib.decompress(entity.get("json"))
 
         if 'access_counter' in entity:
             entity['access_counter'] += int(1)
