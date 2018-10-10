@@ -6,7 +6,7 @@ from . import config
 from .app_blueprint import bp
 import logging
 
-__version__ = "0.0.25"
+__version__ = "0.0.26"
 
 
 def create_app(test_config=None):
