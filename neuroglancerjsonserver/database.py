@@ -32,7 +32,7 @@ class JsonDataBase(object):
 
     def add_json(self, json_data):
         key = self.client.key(self.kind, namespace=self.namespace)
-        entity = datastore.Entity(key)
+        entity = datastore.Entity(key, exclude_from_indexes=['json'])
         entity['json'] = zlib.compress(json_data)
         entity['access_counter'] = int(1)
 
