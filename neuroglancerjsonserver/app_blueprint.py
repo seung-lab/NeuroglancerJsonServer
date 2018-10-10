@@ -96,7 +96,7 @@ def get_json(json_id):
     return jsonify(json.loads(json_data))
 
 @bp.route('/raw/<json_id>', methods=['GET'])
-def get_json(json_id):
+def get_raw_json(json_id):
     db = get_db()
 
     json_data = db.get_json(int(json_id), decompress=False)
