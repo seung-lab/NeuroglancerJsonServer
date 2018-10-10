@@ -101,12 +101,10 @@ def add_json():
 
     print(request.json)
 
-    # db = get_db()
-    #
-    # json_id = db.add_json(json_data)
+    db = get_db()
 
-    json_id = 1
+    json_id = db.add_json(request.json)
 
-    url_base = request.url.strip("/").rsplit("/", 1)
+    url_base = request.url.strip("/").rsplit("/", 1)[0]
 
     return jsonify("{}{}".format(url_base, json_id))
