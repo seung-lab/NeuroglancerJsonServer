@@ -13,7 +13,6 @@ __version__ = "0.0.13"
 # -------------------------------
 
 @bp.route('/', methods=["GET"])
-@bp.route('//', methods=["GET"])
 @bp.route("/index", methods=["GET"])
 def index():
     return "NeuroglancerJsonServer - version " + __version__
@@ -89,7 +88,6 @@ def get_db():
     return g.db
 
 @bp.route('/<json_id>', methods=['GET'])
-@bp.route('//<json_id>', methods=['GET'])
 def get_json(json_id):
     db = get_db()
 
@@ -98,8 +96,7 @@ def get_json(json_id):
     return jsonify(json_data)
 
 
-@bp.route('/post', methods=['POST'])
-@bp.route('/post/', methods=['POST'])
+@bp.route('/post', methods=['POST', 'GET'])
 def add_json():
     json_data = json.loads(request.data)
 

@@ -19,6 +19,7 @@ def create_app(test_config=None):
         app.config.update(test_config)
 
     app.register_blueprint(bp)
+    app.url_map.strict_slashes = False
 
     return app
 
