@@ -7,7 +7,7 @@ import datetime
 from neuroglancerjsonserver import database
 
 bp = Blueprint('neuroglancerjsonserver', __name__, url_prefix="/nglstate")
-__version__ = "0.0.26"
+__version__ = "0.1.0"
 # -------------------------------
 # ------ Access control and index
 # -------------------------------
