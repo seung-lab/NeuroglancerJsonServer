@@ -12,6 +12,7 @@ __version__ = "0.2.1"
 # ------ Access control and index
 # -------------------------------
 
+
 @bp.route('/', methods=["GET"])
 @bp.route("/index", methods=["GET"])
 def index():
@@ -82,10 +83,12 @@ def unhandled_exception(e):
 # ------ Applications
 # -------------------
 
+
 def get_db():
     if 'db' not in g:
         g.db = database.JsonDataBase()
     return g.db
+
 
 @bp.route('/<json_id>', methods=['GET'])
 def get_json(json_id):
@@ -95,6 +98,7 @@ def get_json(json_id):
 
     return jsonify(json.loads(json_data))
 
+
 @bp.route('/raw/<json_id>', methods=['GET'])
 def get_raw_json(json_id):
     db = get_db()
@@ -102,6 +106,7 @@ def get_raw_json(json_id):
     json_data = db.get_json(int(json_id), decompress=False)
 
     return json_data
+
 
 @bp.route('/post', methods=['POST', 'GET'])
 def add_json():
@@ -117,6 +122,5 @@ def add_json():
     print("{}/{}".format(url_base, json_id))
     print(jsonify("{}/{}".format(url_base, json_id)))
     print("\n\n\n\n")
-
 
     return jsonify("{}/{}".format(url_base, json_id))
