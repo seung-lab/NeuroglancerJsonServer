@@ -78,11 +78,11 @@ class JsonDataBase(object):
 
             json_data = zlib.decompress(entity.get("json"))
 
-        json_data = migration.convert_precomputed_to_graphene_v1(json_data)
-        json_data = str.encode(json_data)
-        json_data = zlib.compress(json_data)
+            json_data = migration.convert_precomputed_to_graphene_v1(json_data)
+            json_data = str.encode(json_data)
+            json_data = zlib.compress(json_data)
 
-        entity[self.json_column] = json_data
+            entity[self.json_column] = json_data
 
         if decompress:
             json_data = zlib.decompress(json_data)
