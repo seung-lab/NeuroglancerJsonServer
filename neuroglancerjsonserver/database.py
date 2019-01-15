@@ -45,6 +45,10 @@ class JsonDataBase(object):
         key = self.client.key(self.kind, namespace=self.namespace)
         entity = datastore.Entity(key,
                                   exclude_from_indexes=self.json_col_history)
+
+        json_data = migration.convert_precomputed_to_graphene_v1(json_data)
+        json_data = str.encode(json_data)
+
         entity[self.json_column] = zlib.compress(json_data)
         entity['access_counter'] = int(1)
 
@@ -73,11 +77,12 @@ class JsonDataBase(object):
             entity.exclude_from_indexes.add(self.json_column)
 
             json_data = zlib.decompress(entity.get("json"))
-            json_data = migration.convert_precomputed_to_graphene_v1(json_data)
-            json_data = str.encode(json_data)
-            json_data = zlib.compress(json_data)
 
-            entity[self.json_column] = json_data
+        json_data = migration.convert_precomputed_to_graphene_v1(json_data)
+        json_data = str.encode(json_data)
+        json_data = zlib.compress(json_data)
+
+        entity[self.json_column] = json_data
 
         if decompress:
             json_data = zlib.decompress(json_data)
