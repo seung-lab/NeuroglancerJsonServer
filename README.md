@@ -13,21 +13,23 @@ pip install . --upgrade
 
 ## Hosting
 
-Currently, the server is hosted at https://www.dynamicannotationframework.com:4000 (35.185.22.247:4000). Use the IP address if the website cannot be reached.
+Currently, the server is hosted at https://www.dynamicannotationframework.com (35.185.22.247). Use the IP address if the website cannot be reached.
 
 ## Programmatic access
-Using the `requests` package one get post jsons 
+Using the `requests` package one can post jsons
 
 ```
 import requests
-json_id = requests.post('{}'.format(server_address), data=[json])
+server_post_address = 'https://www.dynamicannotationframework.com/nglstate/post'
+json_id = requests.post('{}'.format(server_post_address), data=json)
 ```
 
 and get them
 
 ```
 import requests
-json = requests.get('{}/{}'.format(server_address, json_id))
+server_get_address = 'https://www.dynamicannotationframework.com/nglstate'
+json = requests.get('{}/{}'.format(server_get_address, json_id))
 ```
 
 
