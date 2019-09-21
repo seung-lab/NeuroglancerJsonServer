@@ -8,7 +8,7 @@ from middle_auth_client import auth_required
 from neuroglancerjsonserver import database
 
 bp = Blueprint('neuroglancerjsonserver', __name__, url_prefix="/nglstate")
-__version__ = "0.2.7"
+__version__ = "0.2.8"
 # -------------------------------
 # ------ Access control and index
 # -------------------------------
