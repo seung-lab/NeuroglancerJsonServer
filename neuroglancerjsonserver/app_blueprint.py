@@ -3,6 +3,7 @@ from flask import current_app
 import json
 import time
 import datetime
+from middle_auth_client import auth_required
 
 from neuroglancerjsonserver import database
 
@@ -91,6 +92,7 @@ def get_db():
 
 
 @bp.route('/<json_id>', methods=['GET'])
+@auth_required
 def get_json(json_id):
     db = get_db()
 
@@ -100,6 +102,7 @@ def get_json(json_id):
 
 
 @bp.route('/raw/<json_id>', methods=['GET'])
+@auth_required
 def get_raw_json(json_id):
     db = get_db()
 
@@ -109,6 +112,7 @@ def get_raw_json(json_id):
 
 
 @bp.route('/post', methods=['POST', 'GET'])
+@auth_required
 def add_json():
     db = get_db()
 
