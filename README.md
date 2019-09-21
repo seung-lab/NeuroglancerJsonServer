@@ -11,12 +11,8 @@ cd NeuroglancerJsonServer
 pip install . --upgrade
 ```
 
-## Hosting
-
-Currently, the server is hosted at https://www.dynamicannotationframework.com:4000 (35.185.22.247:4000). Use the IP address if the website cannot be reached.
-
 ## Programmatic access
-Using the `requests` package one get post jsons 
+Using the `requests` package one can post jsons 
 
 ```
 import requests
