@@ -11,7 +11,7 @@ __version__ = "0.2.8"
 
 def create_app(test_config=None):
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, expose_headers='WWW-Authenticate')
 
     configure_app(app)
 
