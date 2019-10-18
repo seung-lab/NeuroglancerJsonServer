@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+import os
 
 from . import config
 
@@ -27,7 +28,11 @@ def create_app(test_config=None):
 def configure_app(app):
 
     # Load logging scheme from config.py
-    app.config.from_object(config.BaseConfig)
+    app_settings = os.getenv('APP_SETTINGS')
+    if not app_settings:
+        app.config.from_object(config.BaseConfig)
+    else:
+        app.config.from_object(app_settings)
 
     # Configure logging
     # handler = logging.FileHandler(app.config['LOGGING_LOCATION'])
