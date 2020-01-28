@@ -1,5 +1,5 @@
 from werkzeug.serving import WSGIRequestHandler
-from neuroglancerjsonserver import create_app
+from neuroglancerjsonserver.app import create_app
 import os
 
 HOME = os.path.expanduser("~")
@@ -12,6 +12,6 @@ if __name__ == '__main__':
 
     application.run(host='0.0.0.0',
                     port=4001,
-                    debug=True,
+                    debug=False,
                     threaded=True,
                     ssl_context='adhoc')

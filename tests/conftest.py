@@ -1,16 +1,13 @@
 import pytest
-from neuroglancerjsonserver import create_app, database
-import numpy as np
-import tempfile
-import shutil
+from neuroglancerjsonserver import create_app
+from neuroglancerjsonserver.backend import database
 from google.cloud import datastore, exceptions
 import subprocess
-from neuroglancerjsonserver.database import DoNothingCreds
+from neuroglancerjsonserver.backend.database import DoNothingCreds
 import grpc
 from time import sleep
 import os
 from signal import SIGTERM
-from itertools import product
 
 
 @pytest.fixture(scope='session')

@@ -5,7 +5,7 @@ import time
 import datetime
 from middle_auth_client import auth_required
 
-from neuroglancerjsonserver import database
+from neuroglancerjsonserver.backend import database
 
 bp = Blueprint('neuroglancerjsonserver', __name__, url_prefix="/nglstate")
 __version__ = "0.2.11"
@@ -37,7 +37,6 @@ def home():
 
 @bp.before_request
 def before_request():
-    print("NEW REQUEST:", datetime.datetime.now(), request.url)
     g.request_start_time = time.time()
 
 

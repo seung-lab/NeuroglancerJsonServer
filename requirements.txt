@@ -1,4 +1,4 @@
 Flask
 flask_cors
 google-cloud-datastore
-middle-auth-client==1.2.0
+middle-auth-client==1.2.3
