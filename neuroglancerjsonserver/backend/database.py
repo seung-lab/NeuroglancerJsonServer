@@ -3,7 +3,7 @@ import zlib
 import datetime
 from google.cloud import datastore
 
-from neuroglancerjsonserver import migration
+from neuroglancerjsonserver.backend import migration
 
 HOME = os.path.expanduser('~')
 
