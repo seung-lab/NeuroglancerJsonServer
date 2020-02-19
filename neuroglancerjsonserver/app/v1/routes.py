@@ -1,5 +1,5 @@
 from flask import Blueprint
-from middle_auth_client import auth_requires_admin, auth_requires_permission
+from middle_auth_client import auth_required
 from neuroglancerjsonserver.app import common
 
 
@@ -49,18 +49,18 @@ def unhandled_exception(e):
 # -------------------
 
 @bp.route('/<json_id>', methods=['GET'])
-@auth_requires_permission("view")
+@auth_required
 def get_json(json_id):
     return common.get_json(json_id)
 
 
 @bp.route('/raw/<json_id>', methods=['GET'])
-@auth_requires_permission("view")
+@auth_required
 def get_raw_json(json_id):
     return common.get_raw_json(json_id)
 
 
 @bp.route('/post', methods=['POST', 'GET'])
-@auth_requires_permission("view")
+@auth_required
 def add_json():
     return common.add_json()
