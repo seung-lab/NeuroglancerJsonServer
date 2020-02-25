@@ -33,6 +33,10 @@ class JsonDataBase(object):
         return self._namespace
 
     @property
+    def project_id(self):
+        return self.client.project
+
+    @property
     def kind(self):
         return "ngl_json"
 
