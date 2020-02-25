@@ -14,12 +14,15 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = \
 
 class JsonDataBase(object):
     def __init__(self, project_id="neuromancer-seung-import",
-                 client=None, credentials=None):
+                 client=None, credentials=None,
+                 table_name='neuroglancerjsondb'):
         if client is not None:
             self._client = client
         else:
             self._client = datastore.Client(project=project_id,
                                             credentials=credentials)
+
+        self._namespace = table_name
 
     @property
     def client(self):
@@ -27,7 +30,7 @@ class JsonDataBase(object):
 
     @property
     def namespace(self):
-        return 'neuroglancerjsondb'
+        return self._namespace
 
     @property
     def kind(self):
@@ -35,22 +38,19 @@ class JsonDataBase(object):
 
     @property
     def json_column(self):
-        return 'json_graphene_v1'
+        return 'v1'
 
-    @property
-    def json_col_history(self):
-        return "json", 'json_graphene_v1'
-
-    def add_json(self, json_data):
+    def add_json(self, json_data, user_id):
         key = self.client.key(self.kind, namespace=self.namespace)
         entity = datastore.Entity(key,
-                                  exclude_from_indexes=self.json_col_history)
+                                  exclude_from_indexes=(self.json_column,))
 
         json_data = migration.convert_precomputed_to_graphene_v1(json_data)
         json_data = str.encode(json_data)
 
         entity[self.json_column] = zlib.compress(json_data)
         entity['access_counter'] = int(1)
+        entity['user_id'] = user_id
 
         now = datetime.datetime.utcnow()
         entity['date'] = now
@@ -66,23 +66,9 @@ class JsonDataBase(object):
         entity = self.client.get(key)
 
         # Handle data migration to newer formats
-        if self.json_column in entity.keys():
-            json_data = entity.get(self.json_column)
-        else:
-            # Handles migration from almost precomputed (json) to first
-            # graphene format (json_graphene_v1)
+        assert self.json_column in entity.keys()
 
-            assert self.json_column == 'json_graphene_v1'
-
-            entity.exclude_from_indexes.add(self.json_column)
-
-            json_data = zlib.decompress(entity.get("json"))
-
-            json_data = migration.convert_precomputed_to_graphene_v1(json_data)
-            json_data = str.encode(json_data)
-            json_data = zlib.compress(json_data)
-
-            entity[self.json_column] = json_data
+        json_data = entity.get(self.json_column)
 
         if decompress:
             json_data = zlib.decompress(json_data)
