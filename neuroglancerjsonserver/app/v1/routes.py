@@ -68,7 +68,7 @@ def add_json():
 
 @bp.route('/table_info', methods=['POST', 'GET'])
 @auth_required
-def add_json():
+def table_info():
     return common.table_info()
 
 
