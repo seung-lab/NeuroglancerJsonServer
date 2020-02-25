@@ -92,12 +92,14 @@ def get_raw_json(json_id):
 
 
 def add_json():
+    current_app.logger.info("ADD - 0")
+
     user_id = str(g.auth_user["id"])
-    print("ADD - {user_id} - 1")
+    current_app.logger.info("ADD - {user_id} - 1")
 
     db = app_utils.get_json_db()
 
-    print("ADD - {user_id} - 2")
+    current_app.logger.info("ADD - {user_id} - 2")
 
     # Verify that data is json
     try:
@@ -105,12 +107,12 @@ def add_json():
     except ValueError:
         raise ValueError
 
-    print("ADD - {user_id} - 3")
+    current_app.logger.info("ADD - {user_id} - 3")
 
     json_id = db.add_json(request.data, user_id=user_id)
     url_base = request.url.strip("/").rsplit("/", 1)[0]
 
-    print("ADD - {user_id} - 4")
+    current_app.logger.info("ADD - {user_id} - 4")
 
     return jsonify("{}/{}".format(url_base, json_id))
 
