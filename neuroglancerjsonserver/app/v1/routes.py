@@ -64,3 +64,11 @@ def get_raw_json(json_id):
 @auth_required
 def add_json():
     return common.add_json()
+
+
+@bp.route('/table_info', methods=['POST', 'GET'])
+@auth_required
+def add_json():
+    return common.table_info()
+
+

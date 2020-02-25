@@ -105,3 +105,10 @@ def add_json():
     url_base = request.url.strip("/").rsplit("/", 1)[0]
 
     return jsonify("{}/{}".format(url_base, json_id))
+
+
+def table_info():
+    user_id = str(g.auth_user["id"])
+    db = app_utils.get_json_db()
+
+    return f"User: {user_id} - project {db.project_id} - table {db.namespace}"
