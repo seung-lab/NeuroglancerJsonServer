@@ -12,11 +12,13 @@ bp = Blueprint('neuroglancerjsonserver_v0', __name__, url_prefix="/nglstate")
 
 @bp.route('/', methods=["GET"])
 @bp.route("/index", methods=["GET"])
+@auth_required
 def index():
     return common.index()
 
 
 @bp.route
+@auth_required
 def home():
     return common.home()
 
@@ -26,11 +28,13 @@ def home():
 # -------------------------------
 
 @bp.before_request
+@auth_required
 def before_request():
     return common.before_request()
 
 
 @bp.after_request
+@auth_required
 def after_request(response):
     return common.after_request(response)
 
