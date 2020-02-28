@@ -2,4 +2,4 @@ Flask
 flask_cors
 google-cloud-datastore
 python-json-logger
-middle-auth-client==2.0.0
+middle-auth-client==2.0.1
