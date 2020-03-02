@@ -35,11 +35,11 @@ class JsonDataBase(object):
 
     @property
     def json_column(self):
-        return 'json_graphene_v1'
+        return 'v2'
 
     @property
     def json_col_history(self):
-        return "json", 'json_graphene_v1'
+        return "json", 'json_graphene_v1', "v2"
 
     def add_json(self, json_data):
         key = self.client.key(self.kind, namespace=self.namespace)
@@ -68,21 +68,34 @@ class JsonDataBase(object):
         # Handle data migration to newer formats
         if self.json_column in entity.keys():
             json_data = entity.get(self.json_column)
-        else:
+        elif "json_graphene_v1" in entity.keys():
+            # Handles migration from first  graphene format (json_graphene_v1)
+            # to flywire migrated format
+            entity.exclude_from_indexes.add(self.json_column)
+
+            json_data = zlib.decompress(entity.get("json_graphene_v1"))
+
+            json_data = migration.fafbv2_to_public(json_data)
+            json_data = str.encode(json_data)
+            json_data = zlib.compress(json_data)
+
+            entity[self.json_column] = json_data
+        elif "json" in entity.keys():
             # Handles migration from almost precomputed (json) to first
-            # graphene format (json_graphene_v1)
-
-            assert self.json_column == 'json_graphene_v1'
-
+            # graphene format (json_graphene_v1) to flywire migrated format
             entity.exclude_from_indexes.add(self.json_column)
 
             json_data = zlib.decompress(entity.get("json"))
 
             json_data = migration.convert_precomputed_to_graphene_v1(json_data)
+            json_data = migration.fafbv2_to_public(json_data)
             json_data = str.encode(json_data)
             json_data = zlib.compress(json_data)
 
             entity[self.json_column] = json_data
+        else:
+            raise Exception("Unknown column structure. Show this to an admin.")
+
 
         if decompress:
             json_data = zlib.decompress(json_data)
