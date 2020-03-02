@@ -37,6 +37,8 @@ def fafbv2_to_public(json_data):
     j = json.loads(json_data)
     if "fafbv2" in j["jsonStateServer"]:
         j["jsonStateServer"] = "https://globalv1.flywire-daf.com/nglstate/api/v1/post"
+    else:
+        del j["jsonStateServer"]
 
     layers = j["layers"]
 
