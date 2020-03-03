@@ -84,15 +84,10 @@ def unhandled_exception(e):
 # -------------------
 
 
-def get_db():
-    if 'db' not in g:
-        g.db = database.JsonDataBase()
-    return g.db
-
 
 @bp.route('/<json_id>', methods=['GET'])
 def get_json(json_id):
-    db = get_db()
+    db = database.get_db()
 
     json_data = db.get_json(int(json_id), decompress=True)
 
@@ -101,7 +96,7 @@ def get_json(json_id):
 
 @bp.route('/raw/<json_id>', methods=['GET'])
 def get_raw_json(json_id):
-    db = get_db()
+    db = database.get_db()
 
     json_data = db.get_json(int(json_id), decompress=False)
 
@@ -114,7 +109,7 @@ def add_json():
     if "fafbv2" in j.get("jsonStateServer", ""):
         raise Exception("Outdated Server; use https://globalv1.flywire-daf.com/nglstate/api/v1/post")
 
-    db = get_db()
+    db = database.get_db()
 
     json_id = db.add_json(request.data)
 

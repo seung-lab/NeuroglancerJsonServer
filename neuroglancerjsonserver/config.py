@@ -10,3 +10,7 @@ class BaseConfig(object):
     SECRET_KEY = '1d94e52c-1c89-4515-b87a-f48cf3cb7f0b'
     LOGGING_LEVEL = logging.DEBUG
     JSON_SORT_KEYS = False
+    DATASTORE_CONFIG ={
+        "emulate": False,
+        "project_id":  "neuromancer-seung-import"
+    }

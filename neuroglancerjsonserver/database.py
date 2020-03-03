@@ -2,14 +2,36 @@ import os
 import zlib
 import datetime
 from google.cloud import datastore
-
+from google.auth import credentials
 from neuroglancerjsonserver import migration
+from flask import g, current_app
 
 HOME = os.path.expanduser('~')
 
 # Setting environment wide credential path
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = \
            HOME + "/.cloudvolume/secrets/google-secret.json"
+
+class DoNothingCreds(credentials.Credentials):
+    def refresh(self, request):
+        pass
+
+def get_client(config):
+    project_id = config.get('project_id', "neuromancer-seung-import")
+    if config.get('emulate', False):
+        credentials = DoNothingCreds()
+    else:
+        credentials = None
+    client = datastore.Client(project=project_id,
+                              credentials=credentials)
+    return client 
+                         
+def get_db():
+    if 'db' not in g:
+        cred_config = current_app.config['DATASTORE_CONFIG']
+        client = get_client(cred_config)
+        g.db = JsonDataBase(client=client)
+    return g.db
 
 
 class JsonDataBase(object):

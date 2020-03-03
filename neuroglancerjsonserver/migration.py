@@ -11,7 +11,7 @@ def convert_layer_precomputed_to_graphene_v1(layer_obj):
 
 def convert_precomputed_to_graphene_v1(json_data):
     j = json.loads(json_data)
-    layers = j["layers"]
+    layers = j.get("layers", [])
 
     if isinstance(layers, list):
         for layer in layers:
