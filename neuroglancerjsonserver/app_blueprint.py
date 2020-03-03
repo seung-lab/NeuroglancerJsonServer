@@ -111,7 +111,7 @@ def get_raw_json(json_id):
 @bp.route('/post', methods=['POST', 'GET'])
 def add_json():
     j = json.loads(request.data)
-    if "fafbv2" in j["jsonStateServer"]:
+    if "fafbv2" in j.get("jsonStateServer", ""):
         raise Exception("Outdated Server; use https://globalv1.flywire-daf.com/nglstate/api/v1/post")
 
     db = get_db()
