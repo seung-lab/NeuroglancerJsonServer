@@ -1,5 +1,5 @@
 import os
-import zlib
+import zstd
 import datetime
 from google.cloud import datastore
 
@@ -37,6 +37,11 @@ class JsonDataBase(object):
         return self.client.project
 
     @property
+    def storage_bucket(self):
+        #TODO: implement query and store path in datastore table
+        return "/test/"
+
+    @property
     def kind(self):
         return "ngl_json"
 
@@ -44,38 +49,68 @@ class JsonDataBase(object):
     def json_column(self):
         return 'v1'
 
-    def add_json(self, json_data, user_id):
+    def _write_to_gcs(self, data, path):
+    
+    def _read_from_gcs(self, path):
+        return data
+
+
+    def add_json(self, json_data, user_id, access_counter=None, date=None, 
+                 date_last=None, size_limit_mb=20):
+        # Create datastore object first -- need to know ID for GCS write
         key = self.client.key(self.kind, namespace=self.namespace)
         entity = datastore.Entity(key,
                                   exclude_from_indexes=(self.json_column,))
 
-        json_data = migration.convert_precomputed_to_graphene_v1(json_data)
-        json_data = str.encode(json_data)
-
-        entity[self.json_column] = zlib.compress(json_data)
-        entity['access_counter'] = int(1)
+        if access_counter is None:
+            access_counter = int(1)
+        else:
+            access_counter =int(access_counter)
+        entity['access_counter'] = access_counter
         entity['user_id'] = user_id
 
         now = datetime.datetime.utcnow()
-        entity['date'] = now
-        entity["date_last"] = now
+        if date_last is None:
+            date_last = now
+        if date is None:
+            date = now
+        entity['date'] = date
+        entity['date_last'] = date_last
 
         self.client.put(entity)
+        json_id = entity.key.id
+        
+        # Get enttity and for writing the GCS path 
+        key = self.client.key(self.kind, json_id, namespace=self.namespace)
+        entity = self.client.get(key)
 
-        return entity.key.id
+        # Data handling
+        #TODO: ensure all migration is taken care of
+        json_data = str.encode(json_data)
+        json_data_z = zstd.compress(json_data)
+        
+        size_compressed_mb = len(json_data_z) / 1024**2
+        if size_compressed_mb > size_limit_mb:
+            raise Expression(f"Json is too large. The compressed json is {size_compressed_mb}MB.")
+
+        path_to_gcs = f"{storage_bucket}/{user_id}/{json_id}.zstd"
+        self._write_json_to_gcs(json_data_z, path_to_gcs)
+        entity[self.json_column] = path_to_gcs
+
+        self.client.put(entity)
+        return json_id
 
     def get_json(self, json_id, decompress=True):
         key = self.client.key(self.kind, json_id, namespace=self.namespace)
-
         entity = self.client.get(key)
 
         # Handle data migration to newer formats
         assert self.json_column in entity.keys()
 
-        json_data = entity.get(self.json_column)
+        json_data = self._read_from_gcs(entity.get(self.json_column))
 
         if decompress:
-            json_data = zlib.decompress(json_data)
+            json_data = zstd.decompress(json_data)
 
         if 'access_counter' in entity:
             entity['access_counter'] += int(1)
