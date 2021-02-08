@@ -95,24 +95,23 @@ def add_json():
     current_app.logger.info("ADD - 0")
 
     user_id = str(g.auth_user["id"])
-    current_app.logger.info("ADD - {user_id} - 1")
-
     db = app_utils.get_json_db()
-
-    current_app.logger.info("ADD - {user_id} - 2")
 
     # Verify that data is json
     try:
         _ = json.loads(request.data)
     except ValueError:
         raise ValueError
+    
+    date = float(request.args.get("timestamp", time.time()))
+    json_id = request.args.get("id", None)
 
-    current_app.logger.info("ADD - {user_id} - 3")
+    if json_id is not None:
+        json_id = int(json_id)
 
-    json_id = db.add_json(request.data, user_id=user_id)
+    json_id = db.add_json(request.data, user_id=user_id, 
+                          json_id=json_id, date=date)
     url_base = request.url.strip("/").rsplit("/", 1)[0]
-
-    current_app.logger.info("ADD - {user_id} - 4")
 
     return jsonify("{}/{}".format(url_base, json_id))
 
