@@ -3,8 +3,6 @@ import zlib
 import datetime
 from google.cloud import datastore
 
-from neuroglancerjsonserver.backend import migration
-
 HOME = os.path.expanduser('~')
 
 # Setting environment wide credential path
@@ -44,10 +42,17 @@ class JsonDataBase(object):
     def json_column(self):
         return 'v1'
 
-    def add_json(self, json_data, user_id):
-        key = self.client.key(self.kind, namespace=self.namespace)
+    def add_json(self, json_data, user_id, json_id=None, date=None):
+        if json_id is None:
+            key = self.client.key(self.kind, namespace=self.namespace)
+        else:
+            key = self.client.key(self.kind, json_id, namespace=self.namespace)
+        
         entity = datastore.Entity(key,
                                   exclude_from_indexes=(self.json_column,))
+
+        if entity is not None:
+            raise Exception("ID already exists.")
 
         json_data = migration.convert_precomputed_to_graphene_v1(json_data)
         json_data = str.encode(json_data)
@@ -57,7 +62,10 @@ class JsonDataBase(object):
         entity['user_id'] = user_id
 
         now = datetime.datetime.utcnow()
-        entity['date'] = now
+        if date is None:
+            date = now
+
+        entity['date'] = date
         entity["date_last"] = now
 
         self.client.put(entity)
@@ -69,7 +77,6 @@ class JsonDataBase(object):
 
         entity = self.client.get(key)
 
-        # Handle data migration to newer formats
         assert self.json_column in entity.keys()
 
         json_data = entity.get(self.json_column)
