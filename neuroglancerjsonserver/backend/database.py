@@ -11,12 +11,12 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = \
 
 
 class JsonDataBase(object):
-    def __init__(self, project_id="neuromancer-seung-import",
-                 client=None, credentials=None,
-                 table_name='neuroglancerjsondb'):
+    def __init__(self, table_name, project_id=None,
+                 client=None, credentials=None):
         if client is not None:
             self._client = client
         else:
+            assert project_id is not None
             self._client = datastore.Client(project=project_id,
                                             credentials=credentials)
 
@@ -48,10 +48,9 @@ class JsonDataBase(object):
         else:
             key = self.client.key(self.kind, json_id, namespace=self.namespace)
         
-        entity = datastore.Entity(key,
-                                  exclude_from_indexes=(self.json_column,))
+        entity = datastore.Entity(key, exclude_from_indexes=(self.json_column,))
 
-        if entity is not None:
+        if len(entity.values()):
             raise Exception(f"[{self.namespace}][{key}] ID already exists: {entity}")
 
         json_data = str.encode(json_data)
