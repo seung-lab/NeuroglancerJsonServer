@@ -50,7 +50,7 @@ class JsonDataBase(object):
         
         entity = datastore.Entity(key, exclude_from_indexes=(self.json_column,))
 
-        if len(entity.values()):
+        if len(entity.values()) > 0:
             raise Exception(f"[{self.namespace}][{key}] ID already exists: {entity}")
 
         entity[self.json_column] = zlib.compress(json_data)

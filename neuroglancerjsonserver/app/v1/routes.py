@@ -3,6 +3,7 @@ from middle_auth_client import auth_required
 from middle_auth_client import auth_requires_admin
 from neuroglancerjsonserver.app import common
 import time
+import datetime
 
 
 bp = Blueprint('neuroglancerjsonserver_v1', __name__, url_prefix="/nglstate/api/v1")
@@ -74,6 +75,7 @@ def add_json():
 @auth_required
 def add_json_with_id(json_id):
     timestamp = float(request.args.get("timestamp", time.time()))
+    timestamp = datetime.datetime.fromtimestamp(timestamp)
     return common.add_json(int(json_id), timestamp=timestamp)
 
 @bp.route('/table_info', methods=['GET'])
