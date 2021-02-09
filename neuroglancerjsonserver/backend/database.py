@@ -53,7 +53,6 @@ class JsonDataBase(object):
         except:
             entity = None
         
-        print(f"{entity}")
         if entity is not None:
             raise Exception(f"[{self.namespace}][{key}][{json_id}] ID already exists.")
 
