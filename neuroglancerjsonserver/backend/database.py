@@ -49,16 +49,15 @@ class JsonDataBase(object):
             key = self.client.key(self.kind, json_id, namespace=self.namespace)
 
         try:
-            entity = self.client.get(key)
+            exists = False
+            self.client.get(key)
         except:
-            raise Exception(f"[{self.namespace}][{key}] ID already exists: {entity}")
+            exists = True
 
-        print(f"Length: {len(entity.keys())}")
-        print(f"entity.keys(): {entity.keys()}")
-        
+        if exists:
+            raise Exception(f"[{self.namespace}][{key}][{json_id}] ID already exists.")
+
         entity = datastore.Entity(key, exclude_from_indexes=(self.json_column,))
-        if self.json_column in entity.keys() or "user_id" in entity.keys():
-            raise Exception(f"[{self.namespace}][{key}] ID already exists: {entity}")
             
         entity[self.json_column] = zlib.compress(json_data)
         entity['access_counter'] = int(1)
