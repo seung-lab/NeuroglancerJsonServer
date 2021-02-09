@@ -53,8 +53,6 @@ class JsonDataBase(object):
         if len(entity.values()):
             raise Exception(f"[{self.namespace}][{key}] ID already exists: {entity}")
 
-        json_data = str.encode(json_data)
-
         entity[self.json_column] = zlib.compress(json_data)
         entity['access_counter'] = int(1)
         entity['user_id'] = user_id
