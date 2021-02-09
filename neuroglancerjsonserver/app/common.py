@@ -91,9 +91,7 @@ def get_raw_json(json_id):
     return json_data
 
 
-def add_json():
-    current_app.logger.info("ADD - 0")
-
+def add_json(json_id=None, timestamp=None):
     user_id = str(g.auth_user["id"])
     db = app_utils.get_json_db()
 
@@ -102,15 +100,9 @@ def add_json():
         _ = json.loads(request.data)
     except ValueError:
         raise ValueError
-    
-    date = float(request.args.get("timestamp", time.time()))
-    json_id = request.args.get("id", None)
-
-    if json_id is not None:
-        json_id = int(json_id)
 
     json_id = db.add_json(request.data, user_id=user_id, 
-                          json_id=json_id, date=date)
+                          json_id=json_id, date=timestamp)
     url_base = request.url.strip("/").rsplit("/", 1)[0]
 
     return jsonify("{}/{}".format(url_base, json_id))

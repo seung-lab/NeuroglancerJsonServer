@@ -1,5 +1,6 @@
 from flask import Blueprint
 from middle_auth_client import auth_required
+from middle_auth_client import auth_requires_admin
 from neuroglancerjsonserver.app import common
 
 
@@ -68,3 +69,10 @@ def get_raw_json(json_id):
 @auth_required
 def add_json():
     return common.add_json()
+
+
+@bp.route('/post/<json_id>', methods=['POST', 'GET'])
+@auth_requires_admin
+def add_json_with_id(json_id):
+    timestamp = float(request.args.get("timestamp", time.time()))
+    return common.add_json(int(json_id), timestamp=timestamp)

@@ -21,7 +21,9 @@ def get_datastore_client(config):
     else:
         credentials, project_id = default_creds()
 
-    client = datastore.Client(project=project_id, credentials=credentials)
+    client = datastore.Client(project=project_id,
+                              credentials=credentials,
+                              namespace=os.environ.get('JSON_DB_TABLE_NAME'))
     return client
 
 
