@@ -50,10 +50,12 @@ class JsonDataBase(object):
 
         try:
             exists = False
-            self.client.get(key)
+            entity = self.client.get(key)
         except:
+            entity = None
             exists = True
 
+        print(f"{exists} - {entity}")
         if exists:
             raise Exception(f"[{self.namespace}][{key}][{json_id}] ID already exists.")
 
