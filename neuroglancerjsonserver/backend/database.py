@@ -50,11 +50,11 @@ class JsonDataBase(object):
         
         entity = datastore.Entity(key, exclude_from_indexes=(self.json_column,))
 
-        if len(entity.values()) > 0:
+        print(f"Length: {len(entity.keys())}")
+        print(f"entity.keys(): {entity.keys()}")
+        if self.json_column in entity.keys() or "user_id" in entity.keys():
             raise Exception(f"[{self.namespace}][{key}] ID already exists: {entity}")
             
-        print(f"Length: {len(entity.values())}")
-        print(f"Entity: {entity}")
         entity[self.json_column] = zlib.compress(json_data)
         entity['access_counter'] = int(1)
         entity['user_id'] = user_id
