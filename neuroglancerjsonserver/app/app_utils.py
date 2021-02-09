@@ -24,13 +24,14 @@ def get_datastore_client(config):
 
     client = datastore.Client(project=project_id,
                               credentials=credentials,
-                              namespace=os.environ.get('JSON_DB_TABLE_NAME'))
+                              namespace=config.get("TABLE_NAME"))
     return client
 
 
 def get_json_db():
     if "json_db" not in CACHE:
         client = get_datastore_client(current_app.config)
-        CACHE["json_db"] = database.JsonDataBase(client=client)
+        CACHE["json_db"] = database.JsonDataBase(client=client,
+                                                 table_name=current_app.config.get("TABLE_NAME"))
 
     return CACHE["json_db"]
