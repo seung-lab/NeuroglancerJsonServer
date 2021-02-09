@@ -14,6 +14,8 @@ class BaseConfig(object):
     LOGGING_LEVEL = logging.DEBUG
     JSON_SORT_KEYS = False
 
+    TABLE_NAME = os.environ.get("JSON_DB_TABLE_NAME")
+
 
 class DeploymentWithRedisConfig(BaseConfig):
     """Deployment configuration with Redis."""
