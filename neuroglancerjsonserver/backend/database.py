@@ -52,7 +52,7 @@ class JsonDataBase(object):
                                   exclude_from_indexes=(self.json_column,))
 
         if entity is not None:
-            raise Exception("ID already exists.")
+            raise Exception(f"[{self.table_name}][{key}] ID already exists: {entity}")
 
         json_data = migration.convert_precomputed_to_graphene_v1(json_data)
         json_data = str.encode(json_data)
