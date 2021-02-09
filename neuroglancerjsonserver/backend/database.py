@@ -52,7 +52,9 @@ class JsonDataBase(object):
 
         if len(entity.values()) > 0:
             raise Exception(f"[{self.namespace}][{key}] ID already exists: {entity}")
-
+            
+        print(f"Length: {len(entity.values())}")
+        print(f"Entity: {entity}")
         entity[self.json_column] = zlib.compress(json_data)
         entity['access_counter'] = int(1)
         entity['user_id'] = user_id
