@@ -49,14 +49,12 @@ class JsonDataBase(object):
             key = self.client.key(self.kind, json_id, namespace=self.namespace)
 
         try:
-            exists = False
             entity = self.client.get(key)
         except:
             entity = None
-            exists = True
-
-        print(f"{exists} - {entity}")
-        if exists:
+        
+        print(f"{entity}")
+        if entity is not None:
             raise Exception(f"[{self.namespace}][{key}][{json_id}] ID already exists.")
 
         entity = datastore.Entity(key, exclude_from_indexes=(self.json_column,))
