@@ -72,7 +72,7 @@ def add_json():
     return common.add_json()
 
 @bp.route('/post/<json_id>', methods=['POST', 'GET'])
-@auth_required
+@auth_requires_admin
 def add_json_with_id(json_id):
     timestamp = float(request.args.get("timestamp", time.time()))
     timestamp = datetime.datetime.fromtimestamp(timestamp)
