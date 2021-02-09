@@ -54,7 +54,6 @@ class JsonDataBase(object):
         if entity is not None:
             raise Exception(f"[{self.namespace}][{key}] ID already exists: {entity}")
 
-        json_data = migration.convert_precomputed_to_graphene_v1(json_data)
         json_data = str.encode(json_data)
 
         entity[self.json_column] = zlib.compress(json_data)
