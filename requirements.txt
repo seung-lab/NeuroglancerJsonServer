@@ -3,3 +3,4 @@ flask_cors
 google-cloud-datastore
 python-json-logger
 middle-auth-client==3.6.4
+cloud-files
