@@ -58,7 +58,9 @@ class JsonDataBase(object):
 
         entity = datastore.Entity(key, exclude_from_indexes=(self.json_column,))
 
-        entity[self.json_column] = zlib.compress(json_data)
+        data = zlib.compress(json_data)
+        entity[self.json_column] = key.id
+        self._add_data_to_bucket(str(key.id), data)
         entity["access_counter"] = int(1)
         entity["user_id"] = user_id
 
@@ -81,6 +83,8 @@ class JsonDataBase(object):
         assert self.json_column in entity.keys()
 
         json_data = entity.get(self.json_column)
+        if json_data is None:
+            json_data = self._get_data_from_bucket(str(json_id))
 
         if decompress:
             json_data = zlib.decompress(json_data)
