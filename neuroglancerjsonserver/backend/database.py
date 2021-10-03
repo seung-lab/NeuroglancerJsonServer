@@ -106,12 +106,7 @@ class JsonDataBase(object):
         query = query.add_filter("date", ">=", start_date)
         query = query.add_filter("date", "<=", end_date)
         query.keys_only()
-        json_ids = list(query.fetch())
-        result = []
-        for _id in json_ids:
-            state = loads(zlib.decompress(self._get_data_from_bucket(_id, user_id)))
-            result.append(state)
-        return result
+        return list(query.fetch())
 
     def _get_data_from_bucket(self, state_id: str, user_id: str) -> bytes:
         path = f"{self.bucket_name}/{user_id}"
