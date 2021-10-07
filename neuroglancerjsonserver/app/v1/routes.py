@@ -65,12 +65,12 @@ def get_json(json_id):
 
 @bp.route("/my_states", methods=["GET"])
 @auth_required
-def get_user_jsons():
+def get_user_states_info():
     end_time = float(request.args.get("end_time", time.time()))
     start_time = float(request.args.get("start_time", 0))
     end_time = datetime.datetime.fromtimestamp(end_time)
     start_time = datetime.datetime.fromtimestamp(start_time)
-    return common.get_user_jsons()
+    return common.get_user_states_info()
 
 
 @bp.route("/raw/<json_id>", methods=["GET"])

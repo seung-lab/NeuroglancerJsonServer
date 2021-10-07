@@ -96,7 +96,7 @@ class JsonDataBase(object):
         self.client.put(entity)
         return json_data
 
-    def get_user_jsons(
+    def get_user_states_info(
         self, user_id: str, start_date: datetime, end_date: datetime
     ) -> list:
         from json import loads
@@ -105,8 +105,16 @@ class JsonDataBase(object):
         query = query.add_filter("user_id", "=", user_id)
         query = query.add_filter("date", ">=", start_date)
         query = query.add_filter("date", "<=", end_date)
-        query.keys_only()
-        return list(query.fetch())
+        result = []
+        for entity in query.fetch():
+            state_info = {}
+            state_info["id"] = entity.key
+            state_info["user_id"] = entity["user_id"]
+            state_info["access_counter"] = entity.get("access_counter")
+            state_info["date_created"] = entity["date"]
+            state_info["date_accessed"] = entity["date_last"]
+            result.append(state_info)
+        return result
 
     def _get_data_from_bucket(self, state_id: str, user_id: str) -> bytes:
         path = f"{self.bucket_name}/{user_id}"

@@ -102,10 +102,10 @@ def get_json(json_id):
     return jsonify(json.loads(json_data))
 
 
-def get_user_jsons(start_time, end_time):
+def get_user_states_info(start_time, end_time):
     user_id = str(g.auth_user["id"])
     db = app_utils.get_json_db()
-    json_data = db.get_user_jsons(user_id, start_time, end_time)
+    json_data = db.get_user_states_info(user_id, start_time, end_time)
     return jsonify(json_data)
 
 
