@@ -20,6 +20,7 @@ class JsonDataBase(object):
             assert project_id is not None
             self._client = datastore.Client(project=project_id, credentials=credentials)
         self._namespace = table_name
+        self._bucket_name = None
 
     @property
     def client(self):
@@ -43,11 +44,14 @@ class JsonDataBase(object):
 
     @property
     def bucket_name(self):
+        if self._bucket_name is not None:
+            return self._bucket_name
         kind = "nsl_json_bucket_name"
         key_name = "gcs_bucket_name"
         key = self.client.key(kind, key_name, namespace=self.namespace)
         entity = self.client.get(key)
-        return entity["value"]
+        self._bucket_name = entity["value"]
+        return self._bucket_name
 
     def add_json(self, json_data: dict, user_id: str, json_id: int = None, date=None):
         if json_id is None:
