@@ -17,7 +17,11 @@ class JsonDataBase(object):
             self._client = client
         else:
             assert project_id is not None
-            self._client = DatastoreFlex(project=project_id, credentials=credentials)
+            self._client = DatastoreFlex(
+                project=project_id,
+                namespace=table_name,
+                credentials=credentials,
+            )
         self._namespace = table_name
         self._bucket_name = None
 
@@ -52,7 +56,7 @@ class JsonDataBase(object):
         except:
             entity = None
 
-        assert entity is None, f"[{self.namespace}][{key}][{json_id}] ID already exists."
+        assert entity is None, f"[{self.namespace}][{key}][{json_id}] ID exists."
 
         entity = datastore.Entity(key, exclude_from_indexes=(self.json_column,))
         entity[self.json_column] = json_data
