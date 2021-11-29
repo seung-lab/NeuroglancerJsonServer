@@ -1,8 +1,7 @@
 import os
-import zlib
 from datetime import datetime
 from google.cloud import datastore
-from cloudfiles import CloudFiles
+from datastoreflex import DatastoreFlex
 
 HOME = os.path.expanduser("~")
 
@@ -18,7 +17,7 @@ class JsonDataBase(object):
             self._client = client
         else:
             assert project_id is not None
-            self._client = datastore.Client(project=project_id, credentials=credentials)
+            self._client = DatastoreFlex(project=project_id, credentials=credentials)
         self._namespace = table_name
         self._bucket_name = None
 
@@ -42,17 +41,6 @@ class JsonDataBase(object):
     def json_column(self):
         return "v1"
 
-    @property
-    def bucket_name(self):
-        if self._bucket_name is not None:
-            return self._bucket_name
-        kind = "nsl_json_bucket_name"
-        key_name = "gcs_bucket_name"
-        key = self.client.key(kind, key_name, namespace=self.namespace)
-        entity = self.client.get(key)
-        self._bucket_name = entity["value"]
-        return self._bucket_name
-
     def add_json(self, json_data: dict, user_id: str, json_id: int = None, date=None):
         if json_id is None:
             key = self.client.key(self.kind, namespace=self.namespace)
@@ -64,12 +52,10 @@ class JsonDataBase(object):
         except:
             entity = None
 
-        if entity is not None:
-            raise Exception(f"[{self.namespace}][{key}][{json_id}] ID already exists.")
+        assert entity is None, f"[{self.namespace}][{key}][{json_id}] ID already exists."
 
         entity = datastore.Entity(key, exclude_from_indexes=(self.json_column,))
-        data = zlib.compress(json_data)
-        self._add_data_to_bucket(str(key.id), user_id, data)
+        entity[self.json_column] = json_data
         entity["access_counter"] = int(1)
         entity["user_id"] = user_id
         now = datetime.utcnow()
@@ -81,15 +67,12 @@ class JsonDataBase(object):
         self.client.put(entity)
         return entity.key.id
 
-    def get_json(self, json_id: int, user_id: str, decompress: bool = True):
+    def get_json(self, json_id: int):
         key = self.client.key(self.kind, json_id, namespace=self.namespace)
         entity = self.client.get(key)
-        json_data = entity.get(self.json_column)
-        if json_data is None:
-            json_data = self._get_data_from_bucket(str(json_id), user_id)
 
-        if decompress:
-            json_data = zlib.decompress(json_data)
+        assert self.json_column in entity.keys()
+        json_data = entity.get(self.json_column)
 
         if "access_counter" in entity:
             entity["access_counter"] += int(1)
@@ -119,13 +102,3 @@ class JsonDataBase(object):
             state_info["date_accessed"] = entity["date_last"]
             result.append(state_info)
         return result
-
-    def _get_data_from_bucket(self, state_id: str, user_id: str) -> bytes:
-        path = f"{self.bucket_name}/{user_id}"
-        cf = CloudFiles(path)
-        return cf.get(state_id)
-
-    def _add_data_to_bucket(self, state_id: str, user_id: str, data: bytes) -> None:
-        path = f"{self.bucket_name}/{user_id}"
-        cf = CloudFiles(path)
-        cf.put(state_id, data)
